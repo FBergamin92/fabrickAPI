@@ -2,15 +2,15 @@ package it.project.pojo;
 
 import java.util.List;
 
-public class ResponceCashAccountAPI {
+public class ResponseFabrickAPI<T> {
 	
 	private String status;
     private List<String> error;
-    private CashAccount payload;
+    private T payload;
     
-    public ResponceCashAccountAPI() {}
+    public ResponseFabrickAPI() {}
     
-	public ResponceCashAccountAPI(String status, List<String> error, CashAccount payload) {
+	public ResponseFabrickAPI(String status, List<String> error, T payload) {
 		this.status = status;
 		this.error = error;
 		this.payload = payload;
@@ -32,11 +32,11 @@ public class ResponceCashAccountAPI {
 		this.error = error;
 	}
 
-	public CashAccount getPayload() {
+	public T getPayload() {
 		return payload;
 	}
 
-	public void setPayload(CashAccount payload) {
+	public void setPayload(T payload) {
 		this.payload = payload;
 	}
     

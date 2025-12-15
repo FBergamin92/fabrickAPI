@@ -1,6 +1,7 @@
 package it.project.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.project.dto.MoneyTransferRequest;
+import it.project.pojo.CashAccount;
+import it.project.pojo.Transaction;
 import it.project.service.FabrickAPIService;
 
 @RestController
@@ -27,17 +30,21 @@ public class Controller {
 	@GetMapping("/lettura_saldo")
 	public ResponseEntity<String> bankingAccountCash(@RequestParam Long idAccount) {
 		logger.info("Sto cercando le informazioni per {}",idAccount);
-		fabrickAPIService.getSaldo(idAccount);
-		return ResponseEntity.ok("Lettura saldo effettuata");
+		CashAccount result = fabrickAPIService.getSaldo(idAccount);
+		logger.info(result.toString());
+		return ResponseEntity.ok("Lettura saldo effettuata. il tuo saldo è di: " + result.getAvailableBalance());
 	}
 	
 	@GetMapping("/lista_transizioni")
-	public ResponseEntity<String> listTransaction(@RequestParam Long idAccount 
-								//@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateStart, 
-								//@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateEnd
+	public ResponseEntity<String> listTransaction(@RequestParam Long idAccount,
+								@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateStart, 
+							    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateEnd
 			) {
-		fabrickAPIService.getListaTransizioni(idAccount);
-		return ResponseEntity.ok("lettura lista transazioni");
+		List<Transaction> transactions = fabrickAPIService.getListaTransizioni(idAccount, dateStart, dateEnd);
+		transactions.forEach(transaction->{
+			logger.info(transaction.toString());
+		});
+		return ResponseEntity.ok("lettura lista transazioni :" + transactions);
 	}
 	
 	@PostMapping("/bonifico")
